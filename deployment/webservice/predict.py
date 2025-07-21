@@ -5,8 +5,7 @@ import mlflow
 
 
 URI = 'sqlite:////home/youseef/mlflow.db'
-MODEL_ID = "models:/taxi-best/7"
-DV__PATH = '/home/youseef/MLOps-zoomcamp/deployment/webservice/models/lin_reg.bin'
+MODEL_ID = "models:/taxi-best/19"
 
 
 mlflow.set_tracking_uri(URI)
@@ -16,8 +15,6 @@ model = mlflow.pyfunc.load_model(MODEL_ID)
 
 
 
-with open(DV__PATH, 'rb') as f_in:
-    (dv, _) = pickle.load(f_in)
 
 def prepeare_features(ride):
     features = {}
@@ -34,8 +31,7 @@ app = Flask('duration-prediction')
 def predict():
     ride = request.get_json()
     features = prepeare_features(ride)
-    X = dv.transform(features)
-    pred = model.predict(X)
+    pred = model.predict(features)
     return jsonify({'duration': float(pred[0])})
 
 
